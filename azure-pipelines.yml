@@ -1,0 +1,24 @@
+steps:
+- checkout: self
+  submodules: true
+
+- task: UseDotNet@2
+  inputs:
+    version: 10.0.400
+
+- script: dotnet build RoslynPad.slnx -c Release
+  displayName: Build
+
+- script: dotnet pack RoslynPad.slnx -c Release --no-build
+  displayName: Pack
+
+- task: CopyFiles@2
+  inputs:
+    Contents: '**/*.*nupkg'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/packages'
+    flattenFolders: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathToPublish: '$(Build.ArtifactStagingDirectory)/packages'
+    ArtifactName: nupkgs
