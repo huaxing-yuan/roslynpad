@@ -14,6 +14,10 @@
     <Deterministic>True</Deterministic>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <Version>5.9.0</Version>
+    <!-- Fork: CI runs append their build id so every pipeline run yields a unique package version (e.g. 5.9.0.1234) -->
+    <CIBuildNumber Condition=" '$(BUILD_BUILDID)' != '' ">$(BUILD_BUILDID)</CIBuildNumber>
+    <CIBuildNumber Condition=" '$(CIBuildNumber)' == '' and '$(GITHUB_RUN_NUMBER)' != '' ">$(GITHUB_RUN_NUMBER)</CIBuildNumber>
+    <Version Condition=" '$(CIBuildNumber)' != '' ">$(Version).$(CIBuildNumber)</Version>
     <RoslynPadVersion>22.1.0</RoslynPadVersion>
     <ApplicationVersion>$(RoslynPadVersion.Replace('.', ''))</ApplicationVersion>
     <ApplicationDisplayVersion>$(RoslynPadVersion)</ApplicationDisplayVersion>
